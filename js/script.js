@@ -896,6 +896,31 @@ function generateOutputString() {
   let code = '';
 
   switch (settings.outputFormat) {
+    case 'Basic 1D Array': {
+      const varQuickArray = [];
+      let bytesUsed = 0;
+      // --
+      images.each((image) => {
+        code = imageToString(image);
+
+        // Trim whitespace from end and remove trailing comma
+        code = code.replace(/,\s*$/, '');
+
+        code = `\t${code.split('\n').join('\n\t')}\n`;
+        // const variableCount = images.length() > 1 ? count++ : '';
+        const comment = `// '${image.glyph}', ${image.canvas.width}x${image.canvas.height}px\n`;
+        bytesUsed += code.split('\n').length * 16; // 16 bytes per line.
+
+        const varname = getIdentifier() + image.glyph.replace(/[^a-zA-Z0-9]/g, '_');
+        varQuickArray.push(varname);
+        code = `${comment}const ${getImageType()} ${varname} [] {\n${code}};\n`;
+        outputString += code;
+      });
+
+      break;
+    }
+
+
     case 'arduino': {
       const varQuickArray = [];
       let bytesUsed = 0;
@@ -935,7 +960,7 @@ function generateOutputString() {
 
       outputString = outputString.replace(/,\s*$/, '');
 
-      outputString = `const ${getImageType()} ${
+      outputString = `const all_Images ${
         +getIdentifier()
       } [] PROGMEM = {`
             + `\n${outputString}\n};`;
@@ -1114,6 +1139,6 @@ window.onload = () => {
   const fileInput = document.getElementById('file-input');
   fileInput.addEventListener('click', () => { this.value = null; }, false);
   fileInput.addEventListener('change', handleImageSelection, false);
-  document.getElementById('outputFormat').value = 'arduino';
+  document.getElementById('outputFormat').value = 'Basic 1D Array';
   document.getElementById('outputFormat').onchange();
 };

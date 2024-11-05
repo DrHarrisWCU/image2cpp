@@ -186,12 +186,17 @@
             <div class="table-cell"><label for="outputFormat">Code output format</label></div>
             <div class="table-cell">
               <select id="outputFormat" name="outputFormat" onchange="updateOutputFormat(this)">
+                <option value="Basic 1D Array">Basic 1D Array</option>
                 <option value="plain">Plain bytes</option>
                 <option value="arduino">Arduino code</option>
                 <option value="arduino_single">Arduino code, single bitmap</option>
                 <option value="adafruit_gfx">Adafruit GFXbitmapFont</option>
               </select>
               <div id="format-caption-container">
+                <div data-caption="Basic 1D Array">
+                  Generates a basic 1D array to be used in C or C++.
+                  If multiple images are loaded, generates a single byte array.
+                </div>
                 <div data-caption="arduino">
                   Adds some extra Arduino code around the output for easy copy-paste into
                   <a href="https://github.com/javl/image2cpp/blob/master/oled_example/oled_example.ino" target="_blank">this example</a>.
